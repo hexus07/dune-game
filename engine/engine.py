@@ -3,7 +3,7 @@ from engine.attributes import PlayerAttributes
 from engine.color import bright,colored
 from time import sleep
 import pandas as pd
-AttrsType = dict[str, int | float]
+
 
 class Game:
     """The main code for runing the game"""
