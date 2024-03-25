@@ -1,0 +1,13 @@
+p1,The Path of the Desert,"Paul chooses to venture into the vast desert, seeking to understand the harsh environment and its inhabitants.","Paul's exploration of the desert leads to encounters with nomadic tribes and elusive desert creatures, providing valuable insights into survival tactics and diplomacy.
+    - Depending on his choices during these encounters, Paul may forge alliances with the native Fremen or incur their distrust, influencing his future interactions with them and altering the course of the game."
+p2,The Path of Politics,"Opting to immerse himself in the political intrigues of the planet, Paul seeks to navigate the complex power dynamics between noble houses and factions.","Paul's involvement in political machinations exposes him to manipulation and betrayal, forcing him to make difficult decisions that could either strengthen his family's position or lead to their downfall.
+    - Depending on his alliances and allegiances, Paul may gain valuable allies among the ruling elite or become embroiled in a web of deceit that threatens his survival and that of his family."
+p3,The Path of Prophecy,"Embracing his mysterious visions and prophetic dreams, Paul delves deeper into the enigmatic powers that seem to shape his fate","Paul's exploration of his prophetic abilities grants him supernatural insights and foresight, allowing him to foresee potential dangers and opportunities on the planet.
+    - However, delving too deeply into the mysteries of prophecy may attract the attention of malevolent forces or drive Paul to the brink of madness, challenging his sanity and his ability to discern truth from illusion."
+d1,Water Conservation,"While traversing the desert, Paul discovers a hidden oasis. Does he selfishly consume the water, or does he share it with those in need, risking dehydration himself","+ needs, + hapiness, + alegiance"
+d2,It’s my water!,,+ water units 
+d3,Peacefully approach,Paul encounters a group of nomadic desert dwellers. Does he approach them peacefully or assert his authority as a member of House Atreides?,Unknown impact
+d4,Authority assert!!,,
+d5,,,
+v1,Take actions!," Paul experiences a cryptic vision of the future. Does he interpret it as a warning of impending danger and take preemptive action, or does he dismiss it as mere speculation and carry on as usual?",
+v2,Dismiss ‘vision’!,,

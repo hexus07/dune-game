@@ -1,0 +1,4 @@
+#ignore all wav and python cache (pyc) files 
+*.wav
+*.pyc
+
