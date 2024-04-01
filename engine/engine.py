@@ -1,28 +1,17 @@
-from colorama import Fore, init as init_colorama
 from engine.attributes import PlayerAttributes
-from engine.color import bright,colored
+import engine.color as color
 from time import sleep
 import pandas as pd
-
+import os
 
 class Game:
     """The main code for runing the game"""
-
-    def __init__(self) -> None:
-        self.introduction = "Welcome to the game"
-        init_colorama()
-
-    def play(self):
-        """Run the game"""
-        print(bright(self.introduction))
-        sleep(0.5)
-
     def start_attributes(self,points):
         cp, luck, diplomacy, desert_survival = 0, 0, 0, 0
         save = points
 
         for j in ['Combat Power', 'Luck', 'Diplomacy', 'Desert Survival']:
-            print(f'You have {points} points left')
+            print(f'\nYou have {points} points left')
             while True:  # Keep asking until valid input is provided
                 try:
                     print(f'How many points would you like to put in {j}:')
@@ -43,7 +32,7 @@ class Game:
                 except ValueError:
                     print('Invalid input')
 
-        print(f'You have {cp} points in Combat Power, {luck} points in Luck, {diplomacy} points in Diplomacy, and {desert_survival} points in Desert Survival')
+        print(color.bright(f'You have {cp} points in Combat Power, {luck} points in Luck, {diplomacy} points in Diplomacy, and {desert_survival} points in Desert Survival'))
         a = input('Are you happy with your choices? (y/n):')
         if a.lower() in ['yes', 'y']:
             return cp, luck, diplomacy, desert_survival
@@ -51,15 +40,16 @@ class Game:
             return self.start_attributes(save)   
         
     def choice(self, choices: list[str], message: str) -> str:
+        self.clear_screen()
         """Get the player's choice"""
-        print(colored(Fore.LIGHTWHITE_EX, message))
+        print(color.colored('LIGHTWHITE_EX', message))
         colnamee = ['id', 'choices','description','impacct']
         df = pd.read_csv('choices.csv', names = colnamee)
 
         df = df.loc[df['id'].isin(choices)]
         pd.options.display.max_colwidth = 150
         for i in range(len(choices)):
-            print(f'{colored(Fore.GREEN ,str(i+1))}. {df.iloc[i,1]} ')
+            print(color.colored('green' ,str(i+1))+ f'. {df.iloc[i,1]}')
         while True:
             try:
                 choice = int(input('Enter the number of your choice: '))
@@ -67,14 +57,20 @@ class Game:
                     return df.iloc[choice - 1,0]
                 elif choice == 99:
                     for i,j in enumerate( df['description']):
-                        print(f'{colored(Fore.GREEN ,str(i + 1))}. {j} ')
+                        print(color.colored('green' ,str(i + 1))+ f'. {j} ')
                 elif choice == 98:
                     pd.options.display.max_colwidth = 400
                     for i,j in enumerate( df['impacct']):
-                        print(f'{colored(Fore.GREEN ,str(i + 1))}. {j} \n')
+                        print(color.colored('green' ,str(i + 1)) +f'. {j} ')
+                elif choice == 0:
+                    return False
                 else:
-                    print(colored(Fore.LIGHTRED_EX, 'Invalid choice.'))
+                    print(color.colored('LIGHTRED_EX', 'Invalid choice.'))
             except ValueError:
-                print(colored(Fore.LIGHTRED_EX, 'Invalid adadasdchoice.'))
+                print(color.colored('LIGHTRED_EX', 'Invalid adadasdchoice.'))
+        self.clear_screen()
         
-            
+    def clear_screen(self):
+        """Clear the screen"""
+        os.system('cls' if os.name == 'nt' else 'clear')
+

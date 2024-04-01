@@ -1,19 +1,27 @@
 from engine.engine import Game
 from dataclasses import dataclass, field
-from engine.attributes import PlayerAttributes as ea
+import engine.color as color
+from engine.attributes import PlayerAttributes
 import events as ev
 import sys
+import os
 
-
-player = ea()
+player = PlayerAttributes()
 
 class Test(Game):
     def __init__(self):
         super(Test, self).__init__()
 
     def game_over(self):
-        print('Game Over')
-        print('Would you like to play again?')
+        print(color.colored('red', """
+          ____                                            _ 
+         / ___| __ _ _ __ ___   ___    _____   _____ _ __| |
+        | |  _ / _` | '_ ` _ \ / _ \  / _ \ \ / / _ \ '__| |
+        | |_| | (_| | | | | | |  __/ | (_) \ V /  __/ |  |_|
+         \____|\__,_|_| |_| |_|\___|  \___/ \_/ \___|_|  (_)
+        """))
+
+        print('\nWould you like to play again?')
         a = input('y/n: ')
         if a.lower() in ['yes', 'y']:
             self.play()
@@ -23,25 +31,24 @@ class Test(Game):
 
 
     def main(self, paths):
-        print(1)
+        # Choice of path
         path = Game.choice(self, paths, 'What path do you choose?')
+
         if path == 'p1':
-            print('You chose path of Desert')
-            print("As Paul surveyed new territories on his thopter,")
-            print("the vast desert stretched below like a sea of sand dunes.")
-            print("Without warning, a critical node malfunctioned,")
-            print("sending the craft into a spiraling descent.")
-            print("Paul grappled with the controls, trying to regain stability,")
-            print("but it was too late. The thopter plummeted towards the desert,")
-            print("slamming into the sand with a deafening crash,")
-            print("kicking up a cloud of dust and debris.")
-            if ev.survival_challenge(10,10): # water, distance_to_safety - need to change them
+            print(color.bright('You chose path of Desert'))
+            print("As Paul surveyed new territories on his thopter, the vast desert stretched below like a sea of sand dunes.")
+            print("Without warning, a critical node malfunctioned, sending the craft into a spiraling descent.")
+            print("Paul grappled with the controls, trying to regain stability, but it was too late.")
+            print("The thopter plummeted towards the desert, slamming into the sand with a deafening crash, kicking up a cloud of dust and debris.\n\n")
+
+            if ev.survival_challenge(10,10): # water, distance_to_safety 
                 choice = Game.choice(self, ['d1','d2'], 'What would you like to do?')
                 if choice == 'd2':
                     print('You have chosen to save yourself.')
                     player.change_attributes('Allegiance', -30)
-                print("You've chosen the burdens of the people over your own. Now, it's just a matter of reaching your own.")
+                print("\n\nYou've chosen the burdens of the people over your own. Now, it's just a matter of reaching your own.")
                 print('But The path ahead is treacherous.')
+
                 if player.return_attributes()['Desert Survival'] >= 2 and player.return_attributes()['Luck'] >= 2:
                     print('You have the skills to survive.')
 
@@ -57,7 +64,7 @@ class Test(Game):
                         print("With that, the Fremen begin to pose a series of questions to Paul.")
 
                         score = ev.quizz('questions.txt')    
-                        print(score, player.return_attributes()['Allegiance'])
+
                         if score == 4 and player.return_attributes()['Allegiance'] >= 70:
                         
                             print("As the questioning comes to an end, the Fremen leader nods approvingly.")
@@ -90,9 +97,20 @@ class Test(Game):
 
                 paths.remove('p1')
                 self.main(paths=paths)
-        elif path == 'p2':
-            print('You chose path of Politics')
+            else: self.game_over()
         elif path == 'p3':
+            print('                 __')
+            print('                /  \\')
+            print('               /    \\')
+            print('              /      \\')
+            print('             /        \\')
+            print('            /__________\\')
+            print('           /____________\\')
+            print('          /_____/  \\_____\\')
+            print('         /      /    \\    \\')
+            print('        /      /______\\    \\')
+            print('       /      /        \\    \\')
+            print('      /______/__________\\____\\')
             print('You chose path of ')
             print("The day had been challenging, and Paul needed to rest for at least a couple of hours to regain his strength.")
             print("As he settled down to rest, Paul began to drift into sleep.")
@@ -100,8 +118,8 @@ class Test(Game):
             print("His mind was filled with images and sensations that seemed to blur the lines between reality and dreams.")
 
             vision = ev.VisionGame()
-            vision.play()
-
+            if vision.play():
+                player.change_attributes('Happiness', 10)
             print("As the visions faded, Paul found himself back in the harsh reality of the desert.")
             print("The experience had left him feeling disoriented and drained, but he knew he had to press on.")
             print('Interpretation of Visions:')
@@ -116,21 +134,73 @@ class Test(Game):
                 print("As events unfold, Paul begins to notice unsettling parallels between the vision and the unfolding reality. He realizes, too late, that his dismissal of the vision was a grave mistake. The signs he ignored manifest in unexpected ways, posing a grave threat to his family and kingdom.")
                 print("Caught off guard by the unfolding crisis, Paul scrambles to rally his forces and mitigate the damage. However, his delayed response and lack of preparation leave them vulnerable to the machinations of their enemies. The kingdom faces chaos and upheaval as Paul grapples with the consequences of his decision to dismiss the vision.")
                 self.game_over()
+            
+            paths.remove('p3')
+            self.main(paths=paths)
+            
+        #Endings
+        end_attributes = player.return_attributes()
+        if end_attributes['Allegiance'] >= 90 and end_attributes['Happiness'] >= 80  and end_attributes['Needs'] >= 70:
+            print("     __         __")
+            print("    /  \\      /  \\")
+            print("  /      \\  /      \\")
+            print(" /   \\  /\\/  \\/\\/\\   ")
+            print("/_______\\/_/\\/\\_\\_\\")
+            print("/________________________\\")
+            print("\nDespite facing numerous challenges, including political intrigue and external threats, your unwavering commitment to your people pays off.")
+            print("Through shrewd diplomacy and benevolent leadership, you foster a strong sense of unity among the freemen.")
+            print("Your dedication to their well-being earns you their undying loyalty and respect.\n")
+            print("As a result, the alliance of freemen becomes a formidable force, capable of withstanding any adversary.")
+            print("Together, you successfully navigate the treacherous political landscape of Dune, securing peace and prosperity for your people.")
+            print("Your legacy as a wise and compassionate leader endures for generations to come, ensuring a bright future for the freemen and their descendants.")
 
+        elif end_attributes['Allegiance'] >= 60 and end_attributes['Happiness'] >= 50  and end_attributes['Needs'] >= 40:
+            print("    .--.")
+            print("   |o_o |")
+            print("   |:_/ |")
+            print("  //   \ \ ")
+            print(" (|     | )")
+            print("/'\_   _/`\ ")
+            print("\___)=(___/") 
+
+            print("\nDespite your best efforts, maintaining cohesion among the freemen proves to be a daunting task.")
+            print("Internal divisions and external pressures threaten to tear the alliance apart.")
+            print("While you manage to stave off complete collapse, the freemen struggle to overcome the myriad challenges they face.")
+            print("As resources dwindle and tensions escalate, the alliance teeters on the brink of collapse.")
+            print("Although you manage to eke out some semblance of stability, it comes at a great cost.")
+            print("The freemen endure hardship and suffering, their hopes for a better future fading with each passing day.")
+            print("Your leadership is marked by resilience in the face of adversity, but the road ahead remains uncertain and fraught with peril.")
+
+        else:
+            print("\nYour rule over the freemen descends into chaos and despair.")
+            print("Internal strife and external threats erode the alliance, leaving it fractured and vulnerable.")
+            print("Your inability to address the needs and grievances of your people leads to widespread disillusionment and unrest.")
+            print("As dissent simmers and tensions reach a boiling point, violence erupts across Dune.")
+            print("The alliance collapses under the weight of its own divisions, plunging the freemen into a state of chaos and anarchy.")
+            print("Your legacy is one of failure and despair, as the dreams of a united front against tyranny are dashed on the rocks of bitter infighting and betrayal.")
+            self.game_over()
 
     def play(self):
-        # skill select
+        # Clearing the Screen
+        Game.clear_screen(self)
 
-        points = 10
-        print(f'Select your skills, you have {points} points to spend, choose wisely!:')
-             
+        # introduction
+        print(color.bright('Welcome to Dune: The Desert Planet'))
+        print('In this game, you will embark on a journey through the harsh desert landscape of the planet Dune.')
+        print('Your choices will determine the fate of your people and the future of your people.\n')
+
+        # skill selection
+        points = 10 # total points
+        print(color.bright(f'Select your skills, you have {points} points to spend, choose wisely:'))
+
+        # Adding to the player's attributes
         cp, luck, diplomacy, desert_survival =  Game.start_attributes(self,points)
         player.add_attributes({'Combat Power': cp, 'Luck': luck, 'Diplomacy': diplomacy, 'Desert Survival': desert_survival})
-        player.add_attributes({'Allegiance': 71, 'Happiness': 50, 'Needs': '70'})
-        # Choice
-
+        player.add_attributes({'Allegiance': 70, 'Happiness': 50, 'Needs': 70})
+        
+        # Choice and start of the game
         print(player.return_attributes())
-        self.main(paths= ['p1', 'p2', 'p3'])
+        self.main(paths= ['p1','p2','p3']) #see the paths in the choices.csv file
 
 
 if __name__ == '__main__':

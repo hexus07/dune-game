@@ -2,7 +2,7 @@ import random
 import time
 import threading
 import pygame
-from colorama import Fore, Style
+import engine.color as color
 
 def survival_challenge(water, distance_to_safety):
     print("Welcome to the Desert Survival Challenge!")
@@ -57,7 +57,7 @@ def survival_challenge(water, distance_to_safety):
 
 
     if water <= 0:
-        print("\nYou ran out of water and perished in the desert. Game over!")
+        return False
     elif distance_to_safety <= 0:
         print("\nCongratulations! You've reached safety and survived the desert.")
         return True
@@ -138,37 +138,19 @@ class VisionGame:
         print("Puzzle: Identify the missing letter in the sequence to unlock the door.")
         sequences = {
             "ABCD": "E",
-            "FGHI": "J",
-            "JKLM": "N",
-            "OPQR": "S",
             "UVWX": "Y"
         }
         sequence, missing_letter = random.choice(list(sequences.items()))
         print("Sequence:", sequence)
-        print()
-        
-        # Start the timer thread
-        timer_thread = threading.Thread(target=self.timer_thread)
-        timer_thread.start()
-        
-        user_answer = input("Enter the missing letter in the sequence: ").strip().upper()
-        print()
-        
-        # Stop the timer thread
-        timer_thread.join()
-        
-        if user_answer == missing_letter:
-            print(Fore.RED + "Congratulations! You have successfully solved the puzzle and opened the door.")
-        else:
-            print(Fore.RED + "Sorry, that is incorrect. Try again.")
-    
-    def timer_thread(self):
-        elapsed_time = 0
         pygame.mixer.init()
-        clock_sound = pygame.mixer.Sound("clock-ticking.wav")  # Replace "clock_tick.wav" with the path to your clock ticking sound file
+        clock_sound = pygame.mixer.Sound("clock-ticking.wav") 
         clock_sound.play()
-        while elapsed_time < self.time_limit:
-            print(Fore.RED + Style.BRIGHT + f"\rTime left: {self.time_limit - elapsed_time} seconds", end="")
-            elapsed_time += 1
-            time.sleep(1)
-        print()
+        while True:
+            user_answer = input(color.bright("Enter the missing letter in the sequence: ")).strip().upper()
+            
+            if user_answer == missing_letter:
+                print(color.colored('green', "Congratulations! You have successfully solved the puzzle and opened the door."))
+                break
+            print(color.colored('red',"Sorry, that is incorrect. Try again."))
+
+        return True
